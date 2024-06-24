@@ -187,7 +187,8 @@ fn run(args: &Args) -> Result<(), Error> {
     // print!
     for commit in revwalk {
         let commit = commit?;
-        print_commit(&commit);
+        //print_commit(&commit);
+        print_hash_list(&commit);
         if !args.flag_patch || commit.parents().len() > 1 {
             continue;
         }
@@ -230,6 +231,10 @@ fn log_message_matches(msg: Option<&str>, grep: &Option<String>) -> bool {
     }
 }
 
+fn print_hash_list(commit: &Commit) {
+    print!("{:0>64}\n",  format!("{:0>64}", commit.id()));
+    //print!("{:0<64}\n",  format!("{:0<64}", commit.id()));
+}
 fn print_commit(commit: &Commit) {
     //println!("==================>commit {}", commit.id());
     println!("{}", commit.id());
