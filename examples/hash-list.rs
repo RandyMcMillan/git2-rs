@@ -18,6 +18,7 @@ use clap::Parser;
 use git2::{Commit, DiffOptions, ObjectType, Repository, Signature, Time};
 use git2::{DiffFormat, Error, Pathspec};
 use std::str;
+use nostr::*;
 
 #[derive(Parser)]
 struct Args {
@@ -189,6 +190,7 @@ fn run(args: &Args) -> Result<(), Error> {
     for commit in revwalk {
         let commit = commit?;
         //print_commit(&commit);
+	let _ = generate(&commit);
         print_hash_list(&commit);
         if !args.flag_patch || commit.parents().len() > 1 {
             continue;
@@ -306,6 +308,25 @@ impl Args {
         self.flag_max_parents
             .or(if self.flag_no_merges { Some(1) } else { None })
     }
+}
+
+pub fn generate(commit: &Commit) -> Result<()> {
+    print!("{:0>64}\n",  format!("{:0>64}", commit.id()));
+    let keys = Keys::generate();
+
+    let public_key = keys.public_key();
+    let secret_key = keys.secret_key()?;
+
+    //print!("Public key (hex): {}\n", public_key);
+    print!("{}\n", public_key);
+    //print!("Public key (bech32): {}\n", public_key.to_bech32()?);
+    //print!("{}\n", public_key.to_bech32()?);
+    //print!("Secret key (hex): {}\n", keys.secret_key()?.to_secret_hex());
+    print!("{}\n", keys.secret_key()?.to_secret_hex());
+    //print!("Secret key (bech32): {}\n", secret_key.to_bech32()?);
+    //print!("{}\n", secret_key.to_bech32()?);
+
+    Ok(())
 }
 
 fn main() {
