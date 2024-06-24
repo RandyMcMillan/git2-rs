@@ -185,6 +185,7 @@ fn run(args: &Args) -> Result<(), Error> {
         .take(args.flag_max_count.unwrap_or(!0));
 
     // print!
+    {}
     for commit in revwalk {
         let commit = commit?;
         //print_commit(&commit);
