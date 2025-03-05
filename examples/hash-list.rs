@@ -286,15 +286,15 @@ fn log_message_matches(msg: Option<&str>, grep: &Option<String>) -> bool {
 fn print_hashlist(commit: &Commit) -> String {
     print!("{:0>64}\n", format!("{:0>64}", commit.id()));
     if commit.parents().len() > 1 {
-        print!("Merge:");
+        println!(">>");
         for id in commit.parent_ids() {
             //print!(" {:.8}", id);
-            print!(" {:0>64}", id);
+            print!("   >{:0>64}\n", id);
         }
         println!();
     }
     //println!("commit {}", commit.id());
-    format!("{:0>64}\n", format!("{:0>64}", commit.id()))
+    //format!("{:0>64}\n", format!("{:0>64}", commit.id()))
     //println!("commit {}", commit.id());
 
     //if commit.parents().len() > 1 {
@@ -315,6 +315,7 @@ fn print_hashlist(commit: &Commit) -> String {
     //}
     //println!();
     //print!("{:0<64}\n",  format!("{:0<64}", commit.id()));
+    String::from("")
 }
 fn print_commit(commit: &Commit) {
     //format and print commit header and diff
