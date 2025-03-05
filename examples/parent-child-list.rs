@@ -389,7 +389,7 @@ pub fn generate(commit: &Commit) -> Keys {
     //println!("\nsecret-key:{}\n", keys.secret_key().expect("").to_secret_hex());
 
     //let public_key = keys.public_key();
-    let secret_key = keys.secret_key().expect("");
+    //let secret_key = keys.secret_key().expect("");
 
     //print!("Public key (hex): {}\n", public_key);
 
