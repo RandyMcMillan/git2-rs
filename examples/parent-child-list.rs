@@ -285,18 +285,11 @@ fn log_message_matches(msg: Option<&str>, grep: &Option<String>) -> bool {
 
 fn print_hashlist(commit: &Commit) -> String {
     let key_from_commit = &format!("{}", format!("{:0>64}", commit.id()));
-    //let keys = Keys::generate();
     let keys = Keys::parse(key_from_commit).expect("");
-    //println!("\nsecret-key:{}\n", keys.secret_key().expect("").to_secret_hex());
 
-    //let public_key = keys.public_key();
     let secret_key = keys.secret_key().expect("");
     let public_key = keys.public_key();
 
-    //print!("Public key (hex): {}\n", public_key);
-
-    print!("Secret key (bech32): {:?}\n", secret_key.to_bech32());
-    print!("Public key (bech32): {:?}\n", public_key.to_bech32());
     print!(
         "Secret key (bech32): {:}\n",
         secret_key.to_bech32().unwrap()
@@ -315,28 +308,6 @@ fn print_hashlist(commit: &Commit) -> String {
         }
         println!();
     }
-    //println!("commit {}", commit.id());
-    //format!("{:0>64}\n", format!("{:0>64}", commit.id()))
-    //println!("commit {}", commit.id());
-
-    //if commit.parents().len() > 1 {
-    //    print!("Merge:");
-    //    for id in commit.parent_ids() {
-    //        print!(" {:.8}", id);
-    //    }
-    //    println!();
-    //}
-
-    //let author = commit.author();
-    //println!("Author: {}", author);
-    //print_time(&author.when(), "Date:   ");
-    //println!();
-
-    //for line in String::from_utf8_lossy(commit.message_bytes()).lines() {
-    //    println!("    {}", line);
-    //}
-    //println!();
-    //print!("{:0<64}\n",  format!("{:0<64}", commit.id()));
     String::from("")
 }
 fn print_commit(commit: &Commit) {
