@@ -72,6 +72,9 @@ struct Args {
     #[structopt(name = "patch", long, short, default_value = "false")]
     /// show commit diff
     flag_patch: bool,
+    #[structopt(name = "hashlist", long, default_value = "false")]
+    /// show commit hash list
+    flag_hashlist: bool,
     #[structopt(name = "commit")]
     arg_commit: Vec<String>,
     #[structopt(name = "spec", last = true)]
@@ -197,7 +200,16 @@ fn run(args: &Args) -> Result<(), Error> {
         //println!("\nkey_from_commit:secret_key:{}\n", key_from_commit.secret_key().expect("").to_secret_hex());
         //println!("key_from_commit:{:?}", key_from_commit);
         //print_hash_list(&commit);
+
+        //no -p arg
         if !args.flag_patch || commit.parents().len() > 1 {
+            //println!("continue............");
+            //println!("continue............");
+            //println!("continue............");
+            continue;
+        }
+        if args.flag_hashlist {
+            print_hash_list(&commit);
             continue;
         }
         let a = if commit.parents().len() == 1 {
@@ -347,7 +359,7 @@ pub fn generate(commit: &Commit) -> Keys {
     let keys = Keys::parse(key_from_commit).expect("");
     //println!("\nsecret-key:{}\n", keys.secret_key().expect("").to_secret_hex());
 
-    let public_key = keys.public_key();
+    //let public_key = keys.public_key();
     //let secret_key = keys.secret_key().expect("");
 
     //print!("Public key (hex): {}\n", public_key);
