@@ -212,6 +212,7 @@ fn run(args: &Args) -> Result<(), Error> {
             continue;
         }
 
+        //a function
         //-p true present in cli args
         //parse and print diff body
 
@@ -223,6 +224,7 @@ fn run(args: &Args) -> Result<(), Error> {
         };
         let b = commit.tree()?;
         let diff = repo.diff_tree_to_tree(a.as_ref(), Some(&b), Some(&mut diffopts2))?;
+        //
         diff.print(DiffFormat::Patch, |_delta, _hunk, line| {
             match line.origin() {
                 ' ' => print!("{}", line.origin()),
@@ -230,16 +232,6 @@ fn run(args: &Args) -> Result<(), Error> {
                 '-' => print!("{}", line.origin()),
                 _ => {}
             }
-            //let mut hasher = Sha256::new();
-            //let result = hasher.finalize();//empty hash
-            //let hash = format!("{:x}", result); //empty hash
-            //println!("empty hash? {:}", hash); //empty hash
-
-            //let mut hasher = Sha256::new();
-            //hasher.update(line.content());
-            //let result = hasher.finalize();
-            //let hash = format!("{:x}", result);
-            //println!("\nline.content:hash\n{:}", hash);
 
             let mut hasher = Sha256::new();
             //prime hasher with key_from_commit
@@ -248,16 +240,10 @@ fn run(args: &Args) -> Result<(), Error> {
             hasher.update(line.content());
             let result = hasher.finalize();
             let hash = format!("{:x}", result);
-            //println!("\nkey_from_commit:secret_key:{}\n", key_from_commit.secret_key().expect("").to_secret_hex());
-            //println!("\nkey_from_commit->line.content {:?}", hash);
-
-            //hasher.update(line.content());
-            //let result = hasher.finalize();
-            //let hash = format!("{:x}", result);
-            //print!("{:}", hash);
             print!("{}({})\n", str::from_utf8(line.content()).unwrap(), hash);
             true
         })?;
+        //a function end
     }
 
     Ok(())
