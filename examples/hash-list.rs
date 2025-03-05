@@ -192,9 +192,10 @@ fn run(args: &Args) -> Result<(), Error> {
     {}
     for commit in revwalk {
         let commit = commit?;
-        //print_commit(&commit);
+        print_commit(&commit); //print the commit header
+							   //cargo -q run --example hash-list -- -n 2 -p
         let key_from_commit = generate(&commit);
-		println!("\nkey_from_commit:secret_key:{}\n", key_from_commit.secret_key().expect("").to_secret_hex());
+		//println!("\nkey_from_commit:secret_key:{}\n", key_from_commit.secret_key().expect("").to_secret_hex());
         //println!("key_from_commit:{:?}", key_from_commit);
         //print_hash_list(&commit);
         if !args.flag_patch || commit.parents().len() > 1 {
@@ -272,7 +273,7 @@ fn print_hash_list(commit: &Commit) {
 }
 fn print_commit(commit: &Commit) {
     //println!("==================>commit {}", commit.id());
-    println!("{}", commit.id());
+    //println!("{}", commit.id());
 
     if commit.parents().len() > 1 {
         print!("Merge:");
@@ -343,7 +344,7 @@ impl Args {
 }
 
 pub fn generate(commit: &Commit) -> Keys {
-	println!("{}",commit.id());
+	//println!("{}",commit.id());
     let key_from_commit = &format!("{}",  format!("{:0>64}", commit.id()));
     //let keys = Keys::generate();
     let keys = Keys::parse(key_from_commit).expect("");
@@ -352,11 +353,14 @@ pub fn generate(commit: &Commit) -> Keys {
     let public_key = keys.public_key();
     //let secret_key = keys.secret_key().expect("");
 
-    print!("Public key (hex): {}\n", public_key);
+    //print!("Public key (hex): {}\n", public_key);
+
     //print!("•{}\n", public_key);
     //print!("Public key (bech32): {}\n", public_key.to_bech32()?);
     //print!("{}\n", public_key.to_bech32()?);
-    print!("Secret key (hex): {}\n", keys.secret_key().expect("").to_secret_hex());
+	//
+    //print!("Secret key (hex): {}\n", keys.secret_key().expect("").to_secret_hex());
+	//
     //print!("•{}\n", keys.secret_key()?.to_secret_hex());
     //print!("Secret key (bech32): {}\n", secret_key.to_bech32()?);
     //print!("{}\n", secret_key.to_bech32()?);
