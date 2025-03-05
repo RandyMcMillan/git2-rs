@@ -194,8 +194,6 @@ fn run(args: &Args) -> Result<(), Error> {
     {}
     for commit in revwalk {
         let commit = commit?;
-        print_commit(&commit); //print the commit header
-                               //cargo -q run --example hash-list -- -n 2 -p
         let key_from_commit = generate(&commit);
         //println!("\nkey_from_commit:secret_key:{}\n", key_from_commit.secret_key().expect("").to_secret_hex());
         //println!("key_from_commit:{:?}", key_from_commit);
@@ -206,6 +204,8 @@ fn run(args: &Args) -> Result<(), Error> {
             print_hashlist(&commit);
             continue;
         }
+
+        print_commit(&commit); //print the commit header
 
         //no -p arg false
         if !args.flag_patch || commit.parents().len() > 1 {
