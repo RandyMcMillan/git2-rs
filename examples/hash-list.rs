@@ -201,17 +201,22 @@ fn run(args: &Args) -> Result<(), Error> {
         //println!("key_from_commit:{:?}", key_from_commit);
         //print_hash_list(&commit);
 
-        //no -p arg
+        //--hashlist true present in cli args
+        if args.flag_hashlist {
+            print_hash_list(&commit);
+            continue;
+        }
+
+        //no -p arg false
         if !args.flag_patch || commit.parents().len() > 1 {
             //println!("continue............");
             //println!("continue............");
             //println!("continue............");
             continue;
         }
-        if args.flag_hashlist {
-            print_hash_list(&commit);
-            continue;
-        }
+        //-p true present in cli args
+        //parse and print diff body
+
         let a = if commit.parents().len() == 1 {
             let parent = commit.parent(0)?;
             Some(parent.tree()?)
