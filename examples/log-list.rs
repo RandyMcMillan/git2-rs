@@ -204,7 +204,10 @@ fn run(args: &Args) -> Result<(), Error> {
                 ' ' | '+' | '-' => print!("{}", line.origin()),
                 _ => {}
             }
-            print!("==================>{}", str::from_utf8(line.content()).unwrap());
+            print!(
+                "==================>{}",
+                str::from_utf8(line.content()).unwrap()
+            );
             true
         })?;
     }

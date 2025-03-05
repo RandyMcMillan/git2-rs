@@ -17,11 +17,10 @@
 use clap::Parser;
 use git2::{Commit, DiffOptions, ObjectType, Repository, Signature, Time};
 use git2::{DiffFormat, Error, Pathspec};
-use std::str;
 use nostr::*;
+use std::str;
 
 use sha2::{Digest, Sha256};
-
 
 #[derive(Parser)]
 struct Args {
@@ -193,9 +192,9 @@ fn run(args: &Args) -> Result<(), Error> {
     for commit in revwalk {
         let commit = commit?;
         print_commit(&commit); //print the commit header
-							   //cargo -q run --example hash-list -- -n 2 -p
+                               //cargo -q run --example hash-list -- -n 2 -p
         let key_from_commit = generate(&commit);
-		//println!("\nkey_from_commit:secret_key:{}\n", key_from_commit.secret_key().expect("").to_secret_hex());
+        //println!("\nkey_from_commit:secret_key:{}\n", key_from_commit.secret_key().expect("").to_secret_hex());
         //println!("key_from_commit:{:?}", key_from_commit);
         //print_hash_list(&commit);
         if !args.flag_patch || commit.parents().len() > 1 {
@@ -216,31 +215,31 @@ fn run(args: &Args) -> Result<(), Error> {
                 '-' => print!("{}", line.origin()),
                 _ => {}
             }
-			//let mut hasher = Sha256::new();
-			//let result = hasher.finalize();//empty hash
-			//let hash = format!("{:x}", result); //empty hash
-			//println!("empty hash? {:}", hash); //empty hash
+            //let mut hasher = Sha256::new();
+            //let result = hasher.finalize();//empty hash
+            //let hash = format!("{:x}", result); //empty hash
+            //println!("empty hash? {:}", hash); //empty hash
 
-			//let mut hasher = Sha256::new();
-			//hasher.update(line.content());
-			//let result = hasher.finalize();
-			//let hash = format!("{:x}", result);
-			//println!("\nline.content:hash\n{:}", hash);
+            //let mut hasher = Sha256::new();
+            //hasher.update(line.content());
+            //let result = hasher.finalize();
+            //let hash = format!("{:x}", result);
+            //println!("\nline.content:hash\n{:}", hash);
 
-			let mut hasher = Sha256::new();
-			//prime hasher with key_from_commit
-			hasher.update(format!("{:?}", key_from_commit.secret_key()));
-			//the line.content is stacked on top of key_from_commit
-			hasher.update(line.content());
-			let result = hasher.finalize();
-			let hash = format!("{:x}", result);
-			//println!("\nkey_from_commit:secret_key:{}\n", key_from_commit.secret_key().expect("").to_secret_hex());
-			//println!("\nkey_from_commit->line.content {:?}", hash);
+            let mut hasher = Sha256::new();
+            //prime hasher with key_from_commit
+            hasher.update(format!("{:?}", key_from_commit.secret_key()));
+            //the line.content is stacked on top of key_from_commit
+            hasher.update(line.content());
+            let result = hasher.finalize();
+            let hash = format!("{:x}", result);
+            //println!("\nkey_from_commit:secret_key:{}\n", key_from_commit.secret_key().expect("").to_secret_hex());
+            //println!("\nkey_from_commit->line.content {:?}", hash);
 
-			//hasher.update(line.content());
-			//let result = hasher.finalize();
-			//let hash = format!("{:x}", result);
-			//print!("{:}", hash);
+            //hasher.update(line.content());
+            //let result = hasher.finalize();
+            //let hash = format!("{:x}", result);
+            //print!("{:}", hash);
             print!("{}({})\n", str::from_utf8(line.content()).unwrap(), hash);
             true
         })?;
@@ -268,13 +267,11 @@ fn log_message_matches(msg: Option<&str>, grep: &Option<String>) -> bool {
 }
 
 fn print_hash_list(commit: &Commit) {
-    print!("{:0>64}\n",  format!("{:0>64}", commit.id()));
+    print!("{:0>64}\n", format!("{:0>64}", commit.id()));
     //print!("{:0<64}\n",  format!("{:0<64}", commit.id()));
 }
 fn print_commit(commit: &Commit) {
-    //println!("==================>commit {}", commit.id());
-    //println!("{}", commit.id());
-
+    //format and print commit header and diff
     if commit.parents().len() > 1 {
         print!("Merge:");
         for id in commit.parent_ids() {
@@ -344,8 +341,8 @@ impl Args {
 }
 
 pub fn generate(commit: &Commit) -> Keys {
-	//println!("{}",commit.id());
-    let key_from_commit = &format!("{}",  format!("{:0>64}", commit.id()));
+    //println!("{}",commit.id());
+    let key_from_commit = &format!("{}", format!("{:0>64}", commit.id()));
     //let keys = Keys::generate();
     let keys = Keys::parse(key_from_commit).expect("");
     //println!("\nsecret-key:{}\n", keys.secret_key().expect("").to_secret_hex());
@@ -358,9 +355,9 @@ pub fn generate(commit: &Commit) -> Keys {
     //print!("•{}\n", public_key);
     //print!("Public key (bech32): {}\n", public_key.to_bech32()?);
     //print!("{}\n", public_key.to_bech32()?);
-	//
+    //
     //print!("Secret key (hex): {}\n", keys.secret_key().expect("").to_secret_hex());
-	//
+    //
     //print!("•{}\n", keys.secret_key()?.to_secret_hex());
     //print!("Secret key (bech32): {}\n", secret_key.to_bech32()?);
     //print!("{}\n", secret_key.to_bech32()?);
@@ -383,8 +380,6 @@ pub fn generate(commit: &Commit) -> Keys {
     //let secret_key = SecretKey::from_hex("6b911fd37cdf5c81d4c0adb1ab7fa822ed253ab0ad9aa18d77257c88b29b718e").expect("");
     //let keys = Keys::new(secret_key);
     //print!("•{}\n", keys.secret_key()?.to_secret_hex());
-
-
 
     keys
 }
