@@ -20,6 +20,9 @@ use git2::{DiffFormat, Error, Pathspec};
 use std::str;
 use nostr::*;
 
+use sha2::{Digest, Sha256};
+
+
 #[derive(Parser)]
 struct Args {
     #[structopt(name = "topo-order", long)]
@@ -67,7 +70,7 @@ struct Args {
     #[structopt(name = "min-parents")]
     /// specify a minimum number of parents for a commit
     flag_min_parents: Option<usize>,
-    #[structopt(name = "patch", long, short)]
+    #[structopt(name = "patch", long, short, default_value = "false")]
     /// show commit diff
     flag_patch: bool,
     #[structopt(name = "commit")]
@@ -190,9 +193,10 @@ fn run(args: &Args) -> Result<(), Error> {
     for commit in revwalk {
         let commit = commit?;
         //print_commit(&commit);
-	let key_from_commit = generate(&commit);
-	println!("key_from_commit:{:?}", key_from_commit);
-        print_hash_list(&commit);
+        let key_from_commit = generate(&commit);
+		println!("\nkey_from_commit:secret_key:{}\n", key_from_commit.secret_key().expect("").to_secret_hex());
+        //println!("key_from_commit:{:?}", key_from_commit);
+        //print_hash_list(&commit);
         if !args.flag_patch || commit.parents().len() > 1 {
             continue;
         }
@@ -206,7 +210,9 @@ fn run(args: &Args) -> Result<(), Error> {
         let diff = repo.diff_tree_to_tree(a.as_ref(), Some(&b), Some(&mut diffopts2))?;
         diff.print(DiffFormat::Patch, |_delta, _hunk, line| {
             match line.origin() {
-                ' ' | '+' | '-' => print!("{}", line.origin()),
+                ' ' => print!("{}", line.origin()),
+                '+' => print!("{}", line.origin()),
+                '-' => print!("{}", line.origin()),
                 _ => {}
             }
             print!("==================>{}", str::from_utf8(line.content()).unwrap());
@@ -248,18 +254,18 @@ fn print_commit(commit: &Commit) {
         for id in commit.parent_ids() {
             print!(" {:.8}", id);
         }
-        //println!();
+        println!();
     }
 
     let author = commit.author();
-    //println!("Author: {}", author);
-    //print_time(&author.when(), "Date:   ");
-    //println!();
+    println!("Author: {}", author);
+    print_time(&author.when(), "Date:   ");
+    println!();
 
     for line in String::from_utf8_lossy(commit.message_bytes()).lines() {
-        //println!("    {}", line);
+        println!("    {}", line);
     }
-    //println!();
+    println!();
 }
 
 fn print_time(time: &Time, prefix: &str) {
@@ -316,7 +322,7 @@ pub fn generate(commit: &Commit) -> Keys {
     let key_from_commit = &format!("{}",  format!("{:0>64}", commit.id()));
     //let keys = Keys::generate();
     let keys = Keys::parse(key_from_commit).expect("");
-    println!("\nsecret-key:{}\n", keys.secret_key().expect("").to_secret_hex());
+    //println!("\nsecret-key:{}\n", keys.secret_key().expect("").to_secret_hex());
 
     let public_key = keys.public_key();
     //let secret_key = keys.secret_key().expect("");
