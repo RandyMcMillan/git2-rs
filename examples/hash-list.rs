@@ -221,11 +221,14 @@ fn run(args: &Args) -> Result<(), Error> {
 			//println!("empty hash? {:}", hash); //empty hash
 
 			let mut hasher = Sha256::new();
-			hasher.update(format!("{:?}", key_from_commit));
+			//prime hasher with key_from_commit
+			hasher.update(format!("{:?}", key_from_commit.secret_key()));
+			//the line.content is stacked on top of key_from_commit
 			hasher.update(line.content());
-			let result = hasher.finalize();//empty hash
-			let hash = format!("{:x}", result); //empty hash
-			println!("\nkey_from_commit/line.content {:?}", hash); //empty hash
+			let result = hasher.finalize();
+			let hash = format!("{:x}", result);
+			println!("\nkey_from_commit:secret_key:{}\n", key_from_commit.secret_key().expect("").to_secret_hex());
+			println!("\nkey_from_commit->line.content {:?}", hash);
 
 			//hasher.update(line.content());
 			//let result = hasher.finalize();
