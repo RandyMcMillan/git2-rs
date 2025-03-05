@@ -190,7 +190,8 @@ fn run(args: &Args) -> Result<(), Error> {
     for commit in revwalk {
         let commit = commit?;
         //print_commit(&commit);
-	let _ = generate(&commit);
+	let key_from_commit = generate(&commit);
+	println!("key_from_commit:{:?}", key_from_commit);
         print_hash_list(&commit);
         if !args.flag_patch || commit.parents().len() > 1 {
             continue;
@@ -310,23 +311,47 @@ impl Args {
     }
 }
 
-pub fn generate(commit: &Commit) -> Result<()> {
-    print!("{:0>64}\n",  format!("{:0>64}", commit.id()));
-    let keys = Keys::generate();
+pub fn generate(commit: &Commit) -> Keys {
+	println!("{}",commit.id());
+    let key_from_commit = &format!("{}",  format!("{:0>64}", commit.id()));
+    //let keys = Keys::generate();
+    let keys = Keys::parse(key_from_commit).expect("");
+    println!("\nsecret-key:{}\n", keys.secret_key().expect("").to_secret_hex());
 
     let public_key = keys.public_key();
-    let secret_key = keys.secret_key()?;
+    //let secret_key = keys.secret_key().expect("");
 
-    //print!("Public key (hex): {}\n", public_key);
-    print!("{}\n", public_key);
+    print!("Public key (hex): {}\n", public_key);
+    //print!("•{}\n", public_key);
     //print!("Public key (bech32): {}\n", public_key.to_bech32()?);
     //print!("{}\n", public_key.to_bech32()?);
-    //print!("Secret key (hex): {}\n", keys.secret_key()?.to_secret_hex());
-    print!("{}\n", keys.secret_key()?.to_secret_hex());
+    print!("Secret key (hex): {}\n", keys.secret_key().expect("").to_secret_hex());
+    //print!("•{}\n", keys.secret_key()?.to_secret_hex());
     //print!("Secret key (bech32): {}\n", secret_key.to_bech32()?);
     //print!("{}\n", secret_key.to_bech32()?);
 
-    Ok(())
+    // Parse keys directly from secret key
+    //let keys = Keys::parse("secret-key").expect("");
+    //println!("\nsecret-key:{}\n", keys.secret_key()?.to_secret_hex());
+
+    // Parse secret key and construct keys
+    //let secret_key = SecretKey::parse("6b911fd37cdf5c81d4c0adb1ab7fa822ed253ab0ad9aa18d77257c88b29b718e").expect("");
+    //let keys = Keys::new(secret_key);
+
+    //print!("•{}\n", keys.secret_key()?.to_secret_hex());
+    // Restore from bech32
+    //let secret_key = SecretKey::from_bech32("nsec1j4c6269y9w0q2er2xjw8sv2ehyrtfxq3jwgdlxj6qfn8z4gjsq5qfvfk99").expect("");
+    //let keys = Keys::new(secret_key);
+    //print!("•{}\n", keys.secret_key()?.to_secret_hex());
+
+    // Restore from hex
+    //let secret_key = SecretKey::from_hex("6b911fd37cdf5c81d4c0adb1ab7fa822ed253ab0ad9aa18d77257c88b29b718e").expect("");
+    //let keys = Keys::new(secret_key);
+    //print!("•{}\n", keys.secret_key()?.to_secret_hex());
+
+
+
+    keys
 }
 
 fn main() {
