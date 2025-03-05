@@ -224,7 +224,7 @@ fn run(args: &Args) -> Result<(), Error> {
 			hasher.update(line.content());
 			let result = hasher.finalize();
 			let hash = format!("{:x}", result);
-			println!("\nline.content:hash\n{:}", hash);
+			//println!("\nline.content:hash\n{:}", hash);
 			let mut hasher = Sha256::new();
 			//prime hasher with key_from_commit
 			hasher.update(format!("{:?}", key_from_commit.secret_key()));
@@ -232,14 +232,14 @@ fn run(args: &Args) -> Result<(), Error> {
 			hasher.update(line.content());
 			let result = hasher.finalize();
 			let hash = format!("{:x}", result);
-			println!("\nkey_from_commit:secret_key:{}\n", key_from_commit.secret_key().expect("").to_secret_hex());
-			println!("\nkey_from_commit->line.content {:?}", hash);
+			//println!("\nkey_from_commit:secret_key:{}\n", key_from_commit.secret_key().expect("").to_secret_hex());
+			//println!("\nkey_from_commit->line.content {:?}", hash);
 
 			//hasher.update(line.content());
 			//let result = hasher.finalize();
 			//let hash = format!("{:x}", result);
 			//print!("{:}", hash);
-            print!("==================>{}", str::from_utf8(line.content()).unwrap());
+            print!("{}\n{}\n", str::from_utf8(line.content()).unwrap(), hash);
             true
         })?;
     }
