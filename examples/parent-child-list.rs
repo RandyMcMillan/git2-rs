@@ -209,11 +209,9 @@ fn run(args: &Args) -> Result<(), Error> {
 
         //no -p arg false
         if !args.flag_patch || commit.parents().len() > 1 {
-            //println!("continue............");
-            //println!("continue............");
-            //println!("continue............");
             continue;
         }
+
         //-p true present in cli args
         //parse and print diff body
 
@@ -310,6 +308,7 @@ fn print_hashlist(commit: &Commit) -> String {
     }
     String::from("")
 }
+
 fn print_commit(commit: &Commit) {
     //format and print commit header and diff
     if commit.parents().len() > 1 {
