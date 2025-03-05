@@ -285,6 +285,15 @@ fn log_message_matches(msg: Option<&str>, grep: &Option<String>) -> bool {
 
 fn print_hashlist(commit: &Commit) -> String {
     print!("{:0>64}\n", format!("{:0>64}", commit.id()));
+    if commit.parents().len() > 1 {
+        print!("Merge:");
+        for id in commit.parent_ids() {
+            //print!(" {:.8}", id);
+            print!(" {:0>64}", id);
+        }
+        println!();
+    }
+    //println!("commit {}", commit.id());
     format!("{:0>64}\n", format!("{:0>64}", commit.id()))
     //println!("commit {}", commit.id());
 
