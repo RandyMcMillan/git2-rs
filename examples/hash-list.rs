@@ -240,7 +240,7 @@ fn run(args: &Args) -> Result<(), Error> {
 			//let result = hasher.finalize();
 			//let hash = format!("{:x}", result);
 			//print!("{:}", hash);
-            print!("{} ({})\n", str::from_utf8(line.content()).unwrap(), hash);
+            print!("{}({})\n", str::from_utf8(line.content()).unwrap(), hash);
             true
         })?;
     }
