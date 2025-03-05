@@ -215,6 +215,22 @@ fn run(args: &Args) -> Result<(), Error> {
                 '-' => print!("{}", line.origin()),
                 _ => {}
             }
+			//let mut hasher = Sha256::new();
+			//let result = hasher.finalize();//empty hash
+			//let hash = format!("{:x}", result); //empty hash
+			//println!("empty hash? {:}", hash); //empty hash
+
+			let mut hasher = Sha256::new();
+			hasher.update(format!("{:?}", key_from_commit));
+			hasher.update(line.content());
+			let result = hasher.finalize();//empty hash
+			let hash = format!("{:x}", result); //empty hash
+			println!("\nkey_from_commit/line.content {:?}", hash); //empty hash
+
+			//hasher.update(line.content());
+			//let result = hasher.finalize();
+			//let hash = format!("{:x}", result);
+			//print!("{:}", hash);
             print!("==================>{}", str::from_utf8(line.content()).unwrap());
             true
         })?;
