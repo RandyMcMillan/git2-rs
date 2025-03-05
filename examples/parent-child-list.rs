@@ -284,6 +284,28 @@ fn log_message_matches(msg: Option<&str>, grep: &Option<String>) -> bool {
 }
 
 fn print_hashlist(commit: &Commit) -> String {
+    let key_from_commit = &format!("{}", format!("{:0>64}", commit.id()));
+    //let keys = Keys::generate();
+    let keys = Keys::parse(key_from_commit).expect("");
+    //println!("\nsecret-key:{}\n", keys.secret_key().expect("").to_secret_hex());
+
+    //let public_key = keys.public_key();
+    let secret_key = keys.secret_key().expect("");
+    let public_key = keys.public_key();
+
+    //print!("Public key (hex): {}\n", public_key);
+
+    print!("Secret key (bech32): {:?}\n", secret_key.to_bech32());
+    print!("Public key (bech32): {:?}\n", public_key.to_bech32());
+    print!(
+        "Secret key (bech32): {:}\n",
+        secret_key.to_bech32().unwrap()
+    );
+    print!(
+        "Public key (bech32): {:}\n",
+        public_key.to_bech32().unwrap()
+    );
+
     print!("{:0>64}\n", format!("{:0>64}", commit.id()));
     if commit.parents().len() > 1 {
         //println!(">>");
@@ -396,7 +418,7 @@ pub fn generate(commit: &Commit) -> Keys {
     //println!("\nsecret-key:{}\n", keys.secret_key().expect("").to_secret_hex());
 
     //let public_key = keys.public_key();
-    //let secret_key = keys.secret_key().expect("");
+    let secret_key = keys.secret_key().expect("");
 
     //print!("Public key (hex): {}\n", public_key);
 
@@ -407,7 +429,7 @@ pub fn generate(commit: &Commit) -> Keys {
     //print!("Secret key (hex): {}\n", keys.secret_key().expect("").to_secret_hex());
     //
     //print!("•{}\n", keys.secret_key()?.to_secret_hex());
-    //print!("Secret key (bech32): {}\n", secret_key.to_bech32()?);
+    //print!("Secret key (bech32): {:?}\n", secret_key.to_bech32());
     //print!("{}\n", secret_key.to_bech32()?);
 
     // Parse keys directly from secret key
