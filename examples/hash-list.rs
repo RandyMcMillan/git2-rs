@@ -286,10 +286,10 @@ fn log_message_matches(msg: Option<&str>, grep: &Option<String>) -> bool {
 fn print_hashlist(commit: &Commit) -> String {
     print!("{:0>64}\n", format!("{:0>64}", commit.id()));
     if commit.parents().len() > 1 {
-        println!(">>");
+        //println!(">>");
         for id in commit.parent_ids() {
             //print!(" {:.8}", id);
-            print!("   >{:0>64}\n", id);
+            print!("parent:{:0>64}\n", id);
         }
         println!();
     }
