@@ -291,6 +291,7 @@ fn print_commit(commit: &Commit) {
         }
         println!();
     }
+	println!("commit {}",commit.id());
 
     let author = commit.author();
     println!("Author: {}", author);
