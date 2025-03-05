@@ -220,11 +220,12 @@ fn run(args: &Args) -> Result<(), Error> {
 			//let hash = format!("{:x}", result); //empty hash
 			//println!("empty hash? {:}", hash); //empty hash
 
-			let mut hasher = Sha256::new();
-			hasher.update(line.content());
-			let result = hasher.finalize();
-			let hash = format!("{:x}", result);
+			//let mut hasher = Sha256::new();
+			//hasher.update(line.content());
+			//let result = hasher.finalize();
+			//let hash = format!("{:x}", result);
 			//println!("\nline.content:hash\n{:}", hash);
+
 			let mut hasher = Sha256::new();
 			//prime hasher with key_from_commit
 			hasher.update(format!("{:?}", key_from_commit.secret_key()));
@@ -239,7 +240,7 @@ fn run(args: &Args) -> Result<(), Error> {
 			//let result = hasher.finalize();
 			//let hash = format!("{:x}", result);
 			//print!("{:}", hash);
-            print!("{}\n{}\n", str::from_utf8(line.content()).unwrap(), hash);
+            print!("{} ({})\n", str::from_utf8(line.content()).unwrap(), hash);
             true
         })?;
     }
