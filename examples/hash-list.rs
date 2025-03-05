@@ -199,11 +199,11 @@ fn run(args: &Args) -> Result<(), Error> {
         let key_from_commit = generate(&commit);
         //println!("\nkey_from_commit:secret_key:{}\n", key_from_commit.secret_key().expect("").to_secret_hex());
         //println!("key_from_commit:{:?}", key_from_commit);
-        //print_hash_list(&commit);
+        //print_hashlist(&commit);
 
         //--hashlist true present in cli args
         if args.flag_hashlist {
-            print_hash_list(&commit);
+            print_hashlist(&commit);
             continue;
         }
 
@@ -283,8 +283,28 @@ fn log_message_matches(msg: Option<&str>, grep: &Option<String>) -> bool {
     }
 }
 
-fn print_hash_list(commit: &Commit) {
+fn print_hashlist(commit: &Commit) -> String {
     print!("{:0>64}\n", format!("{:0>64}", commit.id()));
+    format!("{:0>64}\n", format!("{:0>64}", commit.id()))
+    //println!("commit {}", commit.id());
+
+    //if commit.parents().len() > 1 {
+    //    print!("Merge:");
+    //    for id in commit.parent_ids() {
+    //        print!(" {:.8}", id);
+    //    }
+    //    println!();
+    //}
+
+    //let author = commit.author();
+    //println!("Author: {}", author);
+    //print_time(&author.when(), "Date:   ");
+    //println!();
+
+    //for line in String::from_utf8_lossy(commit.message_bytes()).lines() {
+    //    println!("    {}", line);
+    //}
+    //println!();
     //print!("{:0<64}\n",  format!("{:0<64}", commit.id()));
 }
 fn print_commit(commit: &Commit) {
