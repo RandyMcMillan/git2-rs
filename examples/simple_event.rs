@@ -181,14 +181,23 @@ fn run(args: &Args) -> Result<(), Error> {
     {}
     for commit in revwalk {
         let commit = commit?;
+
+
+        let name = &format!("{}", format!("{:0>64}", commit.id()));
+		println!("commit_id\n\n{}\n\n", name);
+        let display_name = &format!("{}", format!("{:}", commit.id()));
+		println!("commit_id\n\n{}\n\n", display_name);
+
+
+
         let key_from_commit = generate(&commit);
         //println!("\nkey_from_commit:secret_key:{}\n", key_from_commit.secret_key().expect("").to_secret_hex());
         //println!("key_from_commit:{:?}", key_from_commit);
         //print_hashlist(&commit);
 
         let metadata = Metadata::new()
-            .name("username")
-            .display_name("My Username")
+            .name(name)
+            .display_name(display_name)
             .about("Description")
             .picture(Url::parse("https://example.com/avatar.png").expect(""))
             .banner(Url::parse("https://example.com/banner.png").expect(""))
