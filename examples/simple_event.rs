@@ -206,9 +206,9 @@ fn run(args: &Args) -> Result<(), Error> {
             .expect("");
 
         //// New POW text note
-        //let event: Event = EventBuilder::text_note("My first POW text note from rust-nostr", [])
-        //    .to_pow_event(&key_from_commit, 20)
-        //    .expect("");
+        let event: Event = EventBuilder::text_note("My first POW text note from rust-nostr", [])
+            .to_pow_event(&key_from_commit, 6)
+            .expect("");
 
         // Convert client nessage to JSON
         let json = ClientMessage::event(event).as_json();
