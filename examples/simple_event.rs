@@ -5,8 +5,11 @@ use git2::{Commit, DiffOptions, ObjectType, Repository, Signature, Time};
 use git2::{DiffFormat, Error, Pathspec};
 use nostr::prelude::*;
 use nostr::*;
+use std::net::{Ipv4Addr, SocketAddr, SocketAddrV4};
 use std::str;
 
+use nostr_sdk::Client;
+use nostr_sdk::RelayOptions;
 use sha2::{Digest, Sha256};
 
 #[derive(Parser)]
@@ -68,7 +71,7 @@ struct Args {
     arg_spec: Vec<String>,
 }
 
-fn run(args: &Args) -> Result<(), Error> {
+async fn run(args: &Args) -> Result<(), Error> {
     let path = args.flag_git_dir.as_ref().map(|s| &s[..]).unwrap_or(".");
     let repo = Repository::open(path)?;
     let mut revwalk = repo.revwalk()?;
@@ -182,13 +185,10 @@ fn run(args: &Args) -> Result<(), Error> {
     for commit in revwalk {
         let commit = commit?;
 
-
         let name = &format!("{}", format!("{:0>64}", commit.id()));
-		println!("commit_id\n\n{}\n\n", name);
+        println!("commit_id\n\n{}\n\n", name);
         let display_name = &format!("{}", format!("{:}", commit.id()));
-		println!("commit_id\n\n{}\n\n", display_name);
-
-
+        println!("commit_id\n\n{}\n\n", display_name);
 
         let key_from_commit = generate(&commit);
         //println!("\nkey_from_commit:secret_key:{}\n", key_from_commit.secret_key().expect("").to_secret_hex());
@@ -227,6 +227,28 @@ fn run(args: &Args) -> Result<(), Error> {
         // Convert client nessage to JSON
         let json = ClientMessage::event(event).as_json();
         println!("{json}");
+
+        let client = Client::new(&key_from_commit);
+
+        let proxy = Some(SocketAddr::V4(SocketAddrV4::new(Ipv4Addr::LOCALHOST, 9050)));
+
+        // Add relays
+        client.add_relay("wss://relay.damus.io").await;
+        client
+            .add_relay_with_opts(
+                "wss://relay.nostr.info",
+                RelayOptions::new().proxy(proxy).write(false),
+            )
+            .await;
+        client
+            .add_relay_with_opts(
+                "ws://jgqaglhautb4k6e6i2g34jakxiemqp6z4wynlirltuukgkft2xuglmqd.onion",
+                RelayOptions::new().proxy(proxy),
+            )
+            .await;
+
+        // Connect to relays
+        client.connect().await;
 
         //--hashlist true present in cli args
         if args.flag_hashlist {
@@ -439,9 +461,10 @@ pub fn generate(commit: &Commit) -> Keys {
     keys
 }
 
-fn main() -> Result<()> {
+#[tokio::main]
+async fn main() -> Result<()> {
     let args = Args::parse();
-    match run(&args) {
+    match run(&args).await {
         Ok(()) => {}
         Err(e) => println!("error: {}", e),
     }
