@@ -186,6 +186,34 @@ fn run(args: &Args) -> Result<(), Error> {
         //println!("key_from_commit:{:?}", key_from_commit);
         //print_hashlist(&commit);
 
+        let metadata = Metadata::new()
+            .name("username")
+            .display_name("My Username")
+            .about("Description")
+            .picture(Url::parse("https://example.com/avatar.png").expect(""))
+            .banner(Url::parse("https://example.com/banner.png").expect(""))
+            .nip05("username@example.com")
+            .lud16("yuki@getalby.com")
+            .custom_field("custom_field", "my value");
+
+        let event: Event = EventBuilder::metadata(&metadata)
+            .to_event(&key_from_commit)
+            .expect("");
+
+        // New text note
+        let event: Event = EventBuilder::text_note("Hello from rust-nostr", [])
+            .to_event(&key_from_commit)
+            .expect("");
+
+        // New POW text note
+        let event: Event = EventBuilder::text_note("My first POW text note from rust-nostr", [])
+            .to_pow_event(&key_from_commit, 20)
+            .expect("");
+
+        // Convert client nessage to JSON
+        let json = ClientMessage::event(event).as_json();
+        println!("{json}");
+
         //--hashlist true present in cli args
         if args.flag_hashlist {
             print_hashlist(&commit);
