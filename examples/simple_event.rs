@@ -1,9 +1,9 @@
-use nostr::prelude::*;
 use ::time::at;
 use ::time::Timespec;
 use clap::Parser;
 use git2::{Commit, DiffOptions, ObjectType, Repository, Signature, Time};
 use git2::{DiffFormat, Error, Pathspec};
+use nostr::prelude::*;
 use nostr::*;
 use std::str;
 
